@@ -137,24 +137,30 @@ def chat():
         return jsonify({"error": "Missing 'query' field"}), 400
 
     try:
-        # Ask Gemini for a response
-        response = model.generate_content(user_input)
-        reply = response.text
+        print("Received query:", user_input)
 
-        # You can optionally parse keywords to trigger TMDB functions
+        # Gemini API call
+        response = model.generate_content(user_input)
+        reply = getattr(response, "text", None)
+        print("Gemini reply:", reply)
+
+        # TMDB logic
+        tmdb_data = None
         if "popular movies" in user_input.lower():
             tmdb_data = get_popular_movies()
-            return jsonify({"reply": reply, "popular_movies": tmdb_data})
+            print("Popular movies:", tmdb_data)
         elif "recommend" in user_input.lower():
             title = user_input.replace("recommend", "").strip()
             tmdb_data = get_movie_recommendations(title)
-            return jsonify({"reply": reply, "recommendations": tmdb_data})
+            print("Recommendations:", tmdb_data)
 
-        return jsonify({"reply": reply})
+        return jsonify({"reply": reply, "data": tmdb_data})
 
     except Exception as e:
+        import traceback
+        print("Chat endpoint exception:", e)
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-
 
 # --- RUN APP LOCALLY ---
 if __name__ == "__main__":
