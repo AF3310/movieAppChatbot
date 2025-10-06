@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 import google.generativeai as genai
 import requests
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
-
+CORS(app)
 # --- API Keys ---
 TMDB_API_KEY = "a4a5a039e8224a86d2f82222f8b2f52c"
 GENAI_API_KEY = "AIzaSyAVVwiavHqonUYDgn_WBAlzpO-y4N43Ay4"  # 👈 Replace with your key
