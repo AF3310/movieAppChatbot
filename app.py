@@ -12,7 +12,9 @@ GENAI_API_KEY = "AIzaSyAVVwiavHqonUYDgn_WBAlzpO-y4N43Ay4"  # 👈 Replace with y
 
 # --- Configure Gemini ---
 genai.configure(api_key=GENAI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+models = list(genai.list_models())
+# print(models)
+model = genai.GenerativeModel("gemini-2.5-flash-preview-09-2025")
 
 # --- TMDB API FUNCTIONS ---
 
