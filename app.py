@@ -1,20 +1,19 @@
 from flask import Flask, request, jsonify
-import google.generativeai as genai
 import requests
 from flask_cors import CORS
+from google import genai
+from google.genai import types
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
+
 # --- API Keys ---
 TMDB_API_KEY = "a4a5a039e8224a86d2f82222f8b2f52c"
 GENAI_API_KEY = "AIzaSyAVVwiavHqonUYDgn_WBAlzpO-y4N43Ay4"  # 👈 Replace with your key
 
-# --- Configure Gemini ---
-genai.configure(api_key=GENAI_API_KEY)
-models = list(genai.list_models())
-# print(models)
-model = genai.GenerativeModel("gemini-2.5-flash-preview-09-2025")
+# --- Configure Gemini with new SDK ---
+client = genai.Client(api_key=GENAI_API_KEY)
 
 # --- TMDB API FUNCTIONS ---
 
@@ -141,9 +140,12 @@ def chat():
     try:
         print("Received query:", user_input)
 
-        # Gemini API call
-        response = model.generate_content(user_input)
-        reply = getattr(response, "text", None)
+        # Gemini API call with new SDK
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-exp',
+            contents=user_input
+        )
+        reply = response.text
         print("Gemini reply:", reply)
 
         # TMDB logic
