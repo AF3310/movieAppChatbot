@@ -121,8 +121,11 @@ def get_movie_recommendations(movie_title: str):
         for movie in data['results'][:5]:
             recommendations.append({
                 'title': movie.get('title', 'N/A'),
+                'id': movie.get('id', 'N/A'),
+                'key': movie.get('id', 'N/A'),
                 'release_date': movie.get('release_date', 'N/A'),
                 'rating': movie.get('vote_average', 'N/A'),
+                'poster_path': movie.get('poster_path', 'N/A'),
                 'overview': movie.get('overview', 'No description available')[:200] + "..."
             })
         return recommendations
@@ -209,6 +212,7 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    
     data = request.get_json()
     user_input = data.get("query", "")
 
@@ -243,7 +247,7 @@ def chat():
                     function_output = function_to_call(**args)
                     
                     tmdb_data = function_output # Store the data
-
+                    print(tmdb_data, " TMDB DATA RETURNED")
                     # Prepare the response part for the model
                     function_responses.append(types.Part.from_function_response(
                         name=function_name,
@@ -273,8 +277,11 @@ def chat():
             )
             
             final_reply = final_response.text
-            print(f"--- Final reply: {final_reply[:50]}... ---")
             
+            print(f"--- Final reply: {final_reply[:50]}... ---")
+    # final_reply= "testing api"
+    # tmdb_data=get_movie_recommendations(user_input)
+    # print(tmdb_data[4])
             # Return the model's formatted text reply and the raw data
             return jsonify({"reply": final_reply, "data": tmdb_data})
         
