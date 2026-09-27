@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
 import json
+import os
 from flask_cors import CORS
 from google.genai import Client, types # Using the correct Client and types import
 
@@ -9,9 +10,10 @@ app = Flask(__name__)
 CORS(app)
 
 # --- API Keys ---
-# NOTE: Replace 'AIzaSy...' with your actual key if you run this outside of a secured environment.
 TMDB_API_KEY = "a4a5a039e8224a86d2f82222f8b2f52c"
-GENAI_API_KEY = "AIzaSyAVVwiavHqonUYDgn_WBAlzpO-y4N43Ay4"
+GENAI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GENAI_API_KEY:
+    raise RuntimeError("Set GEMINI_API_KEY in your Vercel environment variables before deploying.")
 
 # --- Configure Gemini with new SDK ---
 client = Client(api_key=GENAI_API_KEY)
