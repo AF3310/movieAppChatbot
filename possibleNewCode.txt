@@ -219,7 +219,7 @@ def chat():
             chat_history = [
                 types.Content(role="user", parts=[types.Part.from_text(user_input)]),
                 types.Content(role="model", parts=initial_response.parts), # Model's function call request
-                types.Content(role="tool", parts=function_responses) # Tool's response (data)
+                types.Content(role="user", parts=function_responses) # Tool's response (data)
             ]
             
             final_response = client.models.generate_content(
