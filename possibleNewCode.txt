@@ -15,6 +15,8 @@ GENAI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GENAI_API_KEY:
     raise RuntimeError("Set GEMINI_API_KEY in your Vercel environment variables before deploying.")
 
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+
 # --- Configure Gemini with new SDK ---
 client = Client(api_key=GENAI_API_KEY)
 
@@ -174,7 +176,7 @@ def chat():
 
         # 1. First Turn: Send user query to the model with tools enabled
         initial_response = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model=GEMINI_MODEL,
             contents=user_input,
             config=types.GenerateContentConfig(tools=tmdb_tools)
         )
@@ -221,7 +223,7 @@ def chat():
             ]
             
             final_response = client.models.generate_content(
-                model='gemini-2.0-flash-exp',
+                model=GEMINI_MODEL,
                 contents=chat_history
             )
             
